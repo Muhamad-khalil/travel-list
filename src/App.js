@@ -1,16 +1,22 @@
 import { useState } from "react";
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: false },
-  { id: 3, description: "graf", quantity: 4, packed: true },
-];
+// const initialItems = [
+//   { id: 1, description: "Passports", quantity: 2, packed: false },
+//   { id: 2, description: "Socks", quantity: 12, packed: false },
+//   { id: 3, description: "graf", quantity: 4, packed: true },
+// ];
 
 export default function App() {
+  const [items, setItems] = useState([]);
+
+  function handleAddClick(item) {
+    setItems([...items, item]);
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddClick} />
+      <PackingList items={items} />
       <Stats />
     </div>
   );
@@ -23,7 +29,7 @@ function Logo() {
 // component Logo
 
 // component Form
-function Form() {
+function Form({ onAddItems }) {
   // state
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -41,14 +47,9 @@ function Form() {
     };
     if (!description) return;
 
-    console.log(newItems);
-
+    onAddItems(newItems);
     setDescription("");
     setQuantity(1);
-
-    const addedItems = [...initialItems, newItems];
-
-    return addedItems;
   }
   // function handleAddClick() {}
 
@@ -82,11 +83,11 @@ function Form() {
 // component Form
 
 //component lists
-function PackingList() {
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Items item={item} key={item.id} />
         ))}
       </ul>
